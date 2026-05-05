@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Atelié Divina Mix</title>
+    <script>
+        // Redireciona erros 404 para index.html
+        var pathparts = location.pathname.split('/');
+        if (pathparts[pathparts.length - 1] !== 'index.html') {
+            location.href = '/angular-ecommerce-v1/index.html';
+        }
+    </script>
+</head>
+<body></body>
+</html>
