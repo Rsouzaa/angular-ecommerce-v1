@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>Atelié Divina Mix</title>
+    <meta charset="UTF-8">
+    <title>Redirecionando...</title>
     <script>
-        // Redireciona erros 404 para index.html
-        var pathparts = location.pathname.split('/');
-        if (pathparts[pathparts.length - 1] !== 'index.html') {
-            location.href = '/angular-ecommerce-v1/index.html';
-        }
+        // Redirecionar para index.html mantendo a rota solicitada
+        const path = window.location.pathname.replace('/angular-ecommerce-v1/', '').replace(/\/$/, '');
+        setTimeout(() => {
+            window.location.href = '/angular-ecommerce-v1/index.html?redirect=' + encodeURIComponent('/' + path);
+        }, 0);
     </script>
 </head>
-<body></body>
+<body>
+    <p>Redirecionando...</p>
+</body>
 </html>
