@@ -1,16 +1,525 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <title>Atelié Divina Mix - Do Fio ao Coração</title>
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Atelié Divina Mix - Crochê & Costura Artesanal. Feito com alma e intenção." />
-    <meta name="theme-color" content="#dc2626" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' font-weight='bold'>❤️</text></svg>" />
-    <link rel="manifest" href="/manifest.json" />
-  </head>
-  <body>
-    <app-root></app-root>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelié Divina Mix - E-commerce Elegante</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/svg+xml" href="svg/logo.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #8B4513 0%, #D4A574 50%, #CD853F 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            color: white;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.8) 0%, rgba(212, 165, 116, 0.6) 100%);
+            border-radius: 10px;
+            margin: 40px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #D4A574 0%, #CD853F 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin: 10px;
+            border: none;
+            font-size: 1em;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 165, 116, 0.4);
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+            padding: 0 20px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            border-top: 4px solid #D4A574;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.3);
+        }
+
+        .feature-card h3 {
+            color: #8B4513;
+            margin: 15px 0;
+            font-size: 1.3em;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        /* Status Section */
+        .status {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            margin: 40px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .status h2 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            background: #D4A574;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .badge.success {
+            background: #10b981;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 3px solid #D4A574;
+        }
+
+        footer h3 {
+            color: #D4A574;
+            margin-bottom: 15px;
+        }
+
+        footer p {
+            margin: 10px 0;
+            opacity: 0.8;
+        }
+
+        footer a {
+            color: #D4A574;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero p {
+                font-size: 1em;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .header-content {
+                justify-content: center;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animação */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .feature-card {
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">✨ Atelié Divina Mix</div>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#status">Status</a>
+                <a href="#github">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>🌟 Atelié Divina Mix</h1>
+            <p>Plataforma E-commerce Elegante e Profissional</p>
+            <p style="font-size: 1em; margin-top: 20px; opacity: 0.9;">
+                Uma aplicação Angular completa com autenticação, gerenciamento de pedidos, pagamentos e painel administrativo
+            </p>
+            <a href="https://github.com/Rsouzaa/angular-ecommerce-v1" class="btn" target="_blank">📂 Ver no GitHub</a>
+            <a href="https://github.com/Rsouzaa/angular-ecommerce-v1#readme" class="btn" target="_blank">📖 Documentação</a>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features">
+            <h2 style="text-align: center; color: white; font-size: 2.5em; margin: 40px 0;">✨ Principais Features</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="icon">👤</div>
+                    <h3>Autenticação</h3>
+                    <p>Sistema completo de login, registro e gestão de perfis de usuário</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🛒</div>
+                    <h3>Carrinho Inteligente</h3>
+                    <p>Proteção contra estoque, atualização em tempo real e persistência local</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">📦</div>
+                    <h3>Gerenciamento de Pedidos</h3>
+                    <p>6 status diferentes, rastreamento e geração automática de notas fiscais</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">💳</div>
+                    <h3>3 Métodos de Pagamento</h3>
+                    <p>Cartão de Crédito, Pix com QR Code e Boleto</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🎁</div>
+                    <h3>Sistema de Cupons</h3>
+                    <p>Descontos, cupons de primeira compra e promoções personalizadas</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">❤️</div>
+                    <h3>Favoritos</h3>
+                    <p>Salve produtos favoritos e crie sua wishlist pessoal</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">📊</div>
+                    <h3>Painel Administrativo</h3>
+                    <p>Dashboard completo com estatísticas e gerenciamento de produtos/pedidos</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">📱</div>
+                    <h3>Responsivo</h3>
+                    <p>Design perfeito para mobile, tablet e desktop com Tailwind CSS</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">⚡</div>
+                    <h3>Performance</h3>
+                    <p>Carregamento rápido com Angular 17+ e otimizações esbuild</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🔐</div>
+                    <h3>Segurança</h3>
+                    <p>Validação em múltiplas camadas, proteção de dados e autenticação segura</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">📄</div>
+                    <h3>Documentação</h3>
+                    <p>README completo, guias de uso e documentação técnica</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🎨</div>
+                    <h3>Design Elegante</h3>
+                    <p>Identidade visual sofisticada com gradientes e animações suaves</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status Section -->
+        <section id="status" class="status">
+            <h2>📊 Status do Projeto V1.0</h2>
+            
+            <div class="status-item">
+                <span>Versão</span>
+                <span class="badge success">v1.0.0</span>
+            </div>
+
+            <div class="status-item">
+                <span>Código-fonte</span>
+                <span class="badge success">96 Arquivos</span>
+            </div>
+
+            <div class="status-item">
+                <span>Linhas de Código</span>
+                <span class="badge success">22.672+</span>
+            </div>
+
+            <div class="status-item">
+                <span>Componentes Angular</span>
+                <span class="badge success">25+</span>
+            </div>
+
+            <div class="status-item">
+                <span>Serviços</span>
+                <span class="badge success">10+</span>
+            </div>
+
+            <div class="status-item">
+                <span>Modelos/Interfaces</span>
+                <span class="badge success">8+</span>
+            </div>
+
+            <div class="status-item">
+                <span>Rotas</span>
+                <span class="badge success">12+</span>
+            </div>
+
+            <div class="status-item">
+                <span>Build Status</span>
+                <span class="badge success">Pronto para Produção</span>
+            </div>
+
+            <div class="status-item">
+                <span>GitHub Pages</span>
+                <span class="badge success">Ativo</span>
+            </div>
+
+            <div class="status-item">
+                <span>Documentação</span>
+                <span class="badge success">Completa</span>
+            </div>
+        </section>
+
+        <!-- Repository Info -->
+        <section id="github" style="background: white; padding: 40px; border-radius: 10px; margin: 40px 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+            <h2 style="color: #8B4513; margin-bottom: 20px;">🔗 Links Importantes</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <a href="https://github.com/Rsouzaa/angular-ecommerce-v1" target="_blank" style="
+                    display: block;
+                    padding: 20px;
+                    background: linear-gradient(135deg, #D4A574 0%, #CD853F 100%);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    text-align: center;
+                    font-weight: bold;
+                    transition: transform 0.3s ease;
+                " onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                    📂 GitHub Repository
+                </a>
+
+                <a href="https://github.com/Rsouzaa/angular-ecommerce-v1#readme" target="_blank" style="
+                    display: block;
+                    padding: 20px;
+                    background: linear-gradient(135deg, #D4A574 0%, #CD853F 100%);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    text-align: center;
+                    font-weight: bold;
+                    transition: transform 0.3s ease;
+                " onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                    📖 README.md
+                </a>
+
+                <a href="https://github.com/Rsouzaa/angular-ecommerce-v1/blob/master/RELEASE_NOTES_V1.md" target="_blank" style="
+                    display: block;
+                    padding: 20px;
+                    background: linear-gradient(135deg, #D4A574 0%, #CD853F 100%);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    text-align: center;
+                    font-weight: bold;
+                    transition: transform 0.3s ease;
+                " onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                    🎉 Release Notes
+                </a>
+
+                <a href="https://github.com/Rsouzaa/angular-ecommerce-v1/releases/tag/v1.0.0" target="_blank" style="
+                    display: block;
+                    padding: 20px;
+                    background: linear-gradient(135deg, #D4A574 0%, #CD853F 100%);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    text-align: center;
+                    font-weight: bold;
+                    transition: transform 0.3s ease;
+                " onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                    🏷️ Tag v1.0.0
+                </a>
+            </div>
+
+            <div style="margin-top: 30px; padding: 20px; background: #f5f5f5; border-radius: 8px; border-left: 4px solid #D4A574;">
+                <h3 style="color: #8B4513; margin-bottom: 10px;">💻 Tecnologias Utilizadas</h3>
+                <p style="margin: 8px 0;">
+                    <strong>Frontend:</strong> Angular 17+, TypeScript, Tailwind CSS, RxJS
+                </p>
+                <p style="margin: 8px 0;">
+                    <strong>Build:</strong> esbuild, Angular CLI
+                </p>
+                <p style="margin: 8px 0;">
+                    <strong>Desenvolvimento:</strong> Node.js, npm
+                </p>
+                <p style="margin: 8px 0;">
+                    <strong>Armazenamento:</strong> localStorage (5-10MB por domínio)
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <h3>Atelié Divina Mix V1.0</h3>
+        <p>Plataforma E-commerce Angular Profissional</p>
+        <p style="margin-top: 20px; opacity: 0.7;">
+            Desenvolvido com ❤️ • 
+            <a href="https://github.com/Rsouzaa/angular-ecommerce-v1" target="_blank">GitHub</a> • 
+            <a href="https://github.com/Rsouzaa/angular-ecommerce-v1/blob/master/LICENSE" target="_blank">MIT License</a>
+        </p>
+        <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.6;">
+            © 2026 Atelié Divina Mix. Todos os direitos reservados.
+        </p>
+    </footer>
+</body>
 </html>
