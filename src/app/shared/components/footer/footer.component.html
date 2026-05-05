@@ -1,0 +1,77 @@
+<footer class="p-4 bg-slate-900 md:p-8 lg:p-10 border-t border-slate-800">
+  <div class="mx-auto max-w-screen-xl text-center">
+    <a
+      aria-label="Atelié Divina Mix Logo"
+      routerLink="/"
+      class="flex justify-center items-center gap-3 mb-4"
+    >
+      <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="h-12">
+        <!-- Coração/Novelo -->
+        <path d="M50,85 C25,70 15,55 15,45 C15,35 22,28 30,28 C38,28 45,35 50,42 C55,35 62,28 70,28 C78,28 85,35 85,45 C85,55 75,70 50,85 Z" fill="#e60023"/>
+        
+        <!-- Textura do novelo -->
+        <circle cx="40" cy="45" r="8" fill="#ff6b7a" opacity="0.6"/>
+        <circle cx="60" cy="45" r="8" fill="#ff6b7a" opacity="0.6"/>
+        <circle cx="50" cy="55" r="7" fill="#ff6b7a" opacity="0.6"/>
+        
+        <!-- Gancho/Agulha -->
+        <path d="M75,25 Q85,20 88,15" stroke="#e60023" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="88" cy="13" r="2" fill="#e60023"/>
+      </svg>
+      
+      <div>
+        <div class="font-bold text-white">Atelié</div>
+        <div class="text-red-600 text-sm font-semibold">Divina Mix</div>
+      </div>
+    </a>
+    <p class="text-gray-300 font-medium mb-2">
+      Crochê & Costura Artesanal - Do Fio ao Coração
+    </p>
+    <p class="text-gray-400 mb-4">
+      ✨ Feito com alma e intenção<br>
+      🧶 Crochê & Costura Artesanal<br>
+      💻 Infantil | Adulto | Acessórios<br>
+      📝 Encomendas por DM
+    </p>
+
+    <!-- Botões de Suporte e Redes Sociais -->
+    <div class="flex justify-center gap-4 mb-6">
+      <!-- WhatsApp -->
+      <a 
+        href="https://wa.me/551140000000?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20seus%20produtos%20e%20serviços" 
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition"
+      >
+        <span>💬</span>
+        <span>WhatsApp</span>
+      </a>
+
+      <!-- Botão Admin (Condicional) -->
+      @if (isAuthenticated$ | async) {
+        <!-- Botão de Logout -->
+        <button 
+          type="button"
+          (click)="logout()"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+        >
+          <span>🔓</span>
+          <span>Sair Admin</span>
+        </button>
+      } @else {
+        <!-- Link para Login -->
+        <a 
+          routerLink="/admin-login"
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded text-purple-600 text-sm hover:text-purple-700 hover:bg-purple-50 transition"
+        >
+          <span>👨‍💼</span>
+          <span>Admin</span>
+        </a>
+      }
+    </div>
+
+    <span class="text-sm text-gray-400 sm:text-center"
+      >© 2024 <a href="#" class="hover:underline font-semibold text-white">Atelié Divina Mix</a>. Todos os direitos reservados.</span
+    >
+  </div>
+</footer>

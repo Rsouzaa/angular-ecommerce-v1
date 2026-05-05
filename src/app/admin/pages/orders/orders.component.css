@@ -1,0 +1,66 @@
+/* Estilos para o componente de gerenciamento de pedidos */
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.status-badge:hover {
+  transform: scale(1.05);
+}
+
+/* Animações para expandir/retrair pedidos */
+.order-details-enter {
+  animation: slideDown 0.3s ease-out;
+}
+
+.order-details-leave {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Estilos para tabelas responsivas */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Print styles para nota fiscal */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background-color: white;
+  }
+  
+  .container {
+    max-width: none;
+    box-shadow: none;
+  }
+}

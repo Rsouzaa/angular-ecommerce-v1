@@ -1,0 +1,312 @@
+<main class="py-8 antialiased md:py-16">
+  <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    @if (orderCompleted) {
+    <div class="text-center mb-8">
+      <div class="inline-block mb-4">
+        <svg class="size-16 text-green-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Pagamento Realizado com Sucesso!</h2>
+      <p class="text-gray-600 mb-6">Seu pedido está sendo processado. Você será redirecionado em breve...</p>
+    </div>
+    } @else {
+    <h2 class="text-xl font-semibold text-gray-900 sm:text-2xl mb-6">Checkout</h2>
+
+    @if (errorMessage) {
+    <div class="mb-6 p-4 rounded-lg bg-red-50 border border-red-200">
+      <p class="text-red-800 text-sm">
+        <strong>Erro:</strong> {{ errorMessage }}
+      </p>
+    </div>
+    }
+
+    <!-- Seção de Cupons -->
+    <div class="mb-6 p-4 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200">
+      <h3 class="text-sm font-semibold text-gray-900 mb-3">💝 Tem um cupom? Aplique aqui!</h3>
+      
+      @if (!activeCoupon) {
+        <div class="flex gap-2">
+          <input 
+            type="text" 
+            [(ngModel)]="couponCode" 
+            placeholder="Digite seu código de cupom" 
+            class="flex-1 rounded-lg border border-purple-300 bg-white p-2.5 text-sm text-gray-900 focus:border-purple-500 focus:ring-purple-500"
+          />
+          <button 
+            (click)="applyCoupon()" 
+            class="px-3 py-1.5 rounded text-purple-600 text-sm hover:text-purple-700 hover:bg-purple-50 transition"
+          >
+            Aplicar
+          </button>
+        </div>
+        
+        @if (couponError) {
+          <p class="text-red-600 text-xs mt-2">❌ {{ couponError }}</p>
+        }
+        
+        <p class="text-xs text-gray-600 mt-2">
+          <strong>Cupons disponíveis:</strong> PRIMEIRACOMPRA (10%), BLACKFRIDAY (30%), CROCHE10 (15%), WELCOME5 (5%)
+        </p>
+      } @else {
+        <div class="flex items-center justify-between bg-white p-3 rounded-lg border-2 border-green-300">
+          <div>
+            <p class="text-green-700 font-semibold">✓ Cupom aplicado com sucesso!</p>
+            <p class="text-sm text-green-600">{{ activeCoupon?.description }}</p>
+            <p class="text-sm font-bold text-green-700 mt-1">{{ discountPercent }}% de desconto</p>
+          </div>
+          <button 
+            (click)="removeCoupon()" 
+            class="px-3 py-1 rounded bg-red-100 text-red-700 text-xs font-medium hover:bg-red-200 transition"
+          >
+            Remover
+          </button>
+        </div>
+      }
+    </div>
+      <!-- Formulário de Pagamento -->
+      <div class="lg:col-span-2">
+        <!-- Dados Pessoais -->
+        <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6 mb-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Dados Pessoais</h3>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label class="block mb-2 text-sm font-medium text-gray-900">Nome Completo *</label>
+              <input type="text" [(ngModel)]="customerInfo.fullName" placeholder="João da Silva" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+            </div>
+            <div>
+              <label class="block mb-2 text-sm font-medium text-gray-900">Email *</label>
+              <input type="email" [(ngModel)]="customerInfo.email" placeholder="seu@email.com" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+            </div>
+            <div>
+              <label class="block mb-2 text-sm font-medium text-gray-900">CPF *</label>
+              <input type="text" [(ngModel)]="customerInfo.cpf" (change)="onCpfChange()" placeholder="000.000.000-00" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+            </div>
+            <div>
+              <label class="block mb-2 text-sm font-medium text-gray-900">Telefone *</label>
+              <input type="tel" [(ngModel)]="customerInfo.phone" placeholder="(11) 98765-4321" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Endereço de Entrega -->
+        <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6 mb-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Endereço de Entrega</h3>
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <label class="block mb-2 text-sm font-medium text-gray-900">Endereço *</label>
+              <input type="text" [(ngModel)]="customerInfo.address" placeholder="Rua da Silva" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Número *</label>
+                <input type="text" [(ngModel)]="customerInfo.number" placeholder="123" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+              </div>
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Complemento</label>
+                <input type="text" [(ngModel)]="customerInfo.complement" placeholder="Apto 42" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Cidade *</label>
+                <input type="text" [(ngModel)]="customerInfo.city" placeholder="São Paulo" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+              </div>
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Estado *</label>
+                <input type="text" [(ngModel)]="customerInfo.state" placeholder="SP" maxlength="2" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+              </div>
+            </div>
+            <div>
+              <label class="block mb-2 text-sm font-medium text-gray-900">CEP *</label>
+              <input type="text" [(ngModel)]="customerInfo.zipCode" placeholder="01234-567" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Formas de Pagamento -->
+        <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Forma de Pagamento</h3>
+
+          <!-- Cartão de Crédito -->
+          <div class="space-y-4">
+            <label class="flex items-center cursor-pointer">
+              <input type="radio" name="paymentMethod" value="credit-card" [(ngModel)]="selectedPaymentMethod" class="w-4 h-4 text-red-600">
+              <span class="ml-3 font-medium text-gray-900">Cartão de Crédito</span>
+            </label>
+
+            @if (selectedPaymentMethod === 'credit-card') {
+            <div class="space-y-4 pl-6 border-l-2 border-red-200">
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Nome no Cartão *</label>
+                <input type="text" [(ngModel)]="cardInfo.cardName" placeholder="NOME SOBRENOME" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 uppercase" />
+              </div>
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="block text-sm font-medium text-gray-900">Número do Cartão *</label>
+                  @if (cardBrand) {
+                  <span class="text-xs font-semibold px-2 py-1 rounded-full bg-red-100 text-red-700">{{ cardBrand }}</span>
+                  }
+                </div>
+                <input type="text" [(ngModel)]="cardInfo.cardNumber" (change)="onCardNumberChange()" placeholder="1234 5678 9012 3456" maxlength="19" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+                @if (cardInfo.cardNumber && !cardValid) {
+                <p class="text-xs text-red-600 mt-1">Número de cartão inválido</p>
+                }
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block mb-2 text-sm font-medium text-gray-900">Validade *</label>
+                  <input type="text" [(ngModel)]="cardInfo.expiryDate" (change)="onExpiryChange()" placeholder="MM/YY" maxlength="5" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+                </div>
+                <div>
+                  <label class="block mb-2 text-sm font-medium text-gray-900">CVV *</label>
+                  <input type="text" [(ngModel)]="cardInfo.cvv" (change)="onCvvChange()" placeholder="123" maxlength="4" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500" />
+                </div>
+              </div>
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900">Parcelamento *</label>
+                <select [(ngModel)]="installments" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500">
+                  @for (option of installmentsList; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+            }
+          </div>
+
+          <!-- Pix -->
+          <div class="space-y-4 pt-4 border-t border-gray-200">
+            <label class="flex items-center cursor-pointer">
+              <input type="radio" name="paymentMethod" value="pix" [(ngModel)]="selectedPaymentMethod" class="w-4 h-4 text-red-600">
+              <span class="ml-3 font-medium text-gray-900">Pix</span>
+            </label>
+
+            @if (selectedPaymentMethod === 'pix' && pixData) {
+            <div class="pl-6 bg-blue-50 p-4 rounded-lg border border-blue-200 space-y-4">
+              <div class="bg-white p-4 rounded border border-gray-300 text-center">
+                <p class="text-xs text-gray-500 mb-3 font-medium">QR Code para pagamento</p>
+                <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + (pixData?.qrCode || '')" [alt]="'QR Code Pix'" class="w-48 h-48 mx-auto"/>
+              </div>
+              <div class="bg-white p-3 rounded border border-gray-300">
+                <p class="text-xs text-gray-500 mb-2">Chave Pix (copiar e colar)</p>
+                <div class="flex items-center gap-2">
+                  <input type="text" [value]="pixData?.pixCopyPaste" readonly class="flex-1 rounded border border-gray-300 bg-gray-50 p-2 text-xs text-gray-900 font-mono" />
+                  <button type="button" (click)="copyPixKey()" class="px-3 py-2 rounded bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition whitespace-nowrap">
+                    {{ copyFeedback === 'pixKey' ? '✓ Copiado!' : 'Copiar' }}
+                  </button>
+                </div>
+              </div>
+              <p class="text-xs text-gray-600 bg-blue-100 p-2 rounded">Escaneie o QR Code com seu app de banco ou copie a chave para pagar. A confirmação pode levar alguns segundos.</p>
+            </div>
+            } @else if (selectedPaymentMethod === 'pix') {
+            <div class="pl-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <p class="text-sm text-gray-600">Após confirmar o pedido, você receberá um QR Code para realizar o pagamento por Pix.</p>
+            </div>
+            }
+          </div>
+
+          <!-- Boleto -->
+          <div class="space-y-4 pt-4 border-t border-gray-200">
+            <label class="flex items-center cursor-pointer">
+              <input type="radio" name="paymentMethod" value="boleto" [(ngModel)]="selectedPaymentMethod" class="w-4 h-4 text-red-600">
+              <span class="ml-3 font-medium text-gray-900">Boleto Bancário</span>
+            </label>
+
+            @if (selectedPaymentMethod === 'boleto' && boletoData) {
+            <div class="pl-6 bg-amber-50 p-4 rounded-lg border border-amber-200 space-y-3">
+              <div class="bg-white p-3 rounded border border-gray-300">
+                <p class="text-xs text-gray-500 mb-2 font-medium">Código do Boleto</p>
+                <div class="flex items-center gap-2">
+                  <input type="text" [value]="boletoData?.barcode" readonly class="flex-1 rounded border border-gray-300 bg-gray-50 p-2 text-xs text-gray-900 font-mono" />
+                  <button type="button" (click)="copyBoleto()" class="px-3 py-2 rounded bg-amber-600 text-white text-xs font-medium hover:bg-amber-700 transition whitespace-nowrap">
+                    {{ copyFeedback === 'boleto' ? '✓ Copiado!' : 'Copiar' }}
+                  </button>
+                </div>
+              </div>
+              <div class="bg-white p-3 rounded border border-gray-300">
+                <p class="text-xs text-gray-500 mb-1">Vencimento</p>
+                <p class="text-sm font-semibold text-gray-900">{{ boletoData?.dueDate | date:'dd/MM/yyyy' }}</p>
+              </div>
+              <p class="text-xs text-gray-600 bg-amber-100 p-2 rounded">Copie o código do boleto acima ou acesse seu banco para registrá-lo. O vencimento é de 3 dias.</p>
+            </div>
+            } @else if (selectedPaymentMethod === 'boleto') {
+            <div class="pl-6 bg-amber-50 p-4 rounded-lg border border-amber-200">
+              <p class="text-sm text-gray-600">Após confirmar o pedido, você receberá um código de boleto para pagamento em sua instituição bancária.</p>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumo do Pedido -->
+      <div class="lg:col-span-1">
+        <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6 sticky top-4">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Resumo do Pedido</h3>
+
+          <div class="space-y-4">
+            @if (cart$ | async; as cartItems) {
+              @if (!cartItems || cartItems.length === 0) {
+                <p class="text-gray-500 text-sm">Seu carrinho está vazio</p>
+              } @else {
+                @for (item of cartItems; track item.product.id) {
+                  <div class="flex gap-3 border-b border-gray-200 pb-3">
+                    <div class="flex items-center justify-center shrink-0">
+                      <img [src]="item.product.urlImg" [alt]="item.product.name" class="size-20 object-contain object-center p-2" />
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-sm font-medium text-gray-900">{{ item.product.name }}</p>
+                      <p class="text-xs text-gray-500">Quantidade: {{ item.quantity }}</p>
+                      <p class="text-sm font-semibold text-gray-900 mt-1">{{ (item.product.price * item.quantity) | currency }}</p>
+                    </div>
+                  </div>
+                }
+              }
+            }
+          </div>
+
+          @if (cart$ | async; as cartItems) {
+          @if (cartItems && cartItems.length > 0) {
+          <div class="border-t border-gray-200 pt-4 space-y-2">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Subtotal</span>
+              <span class="font-medium text-gray-900">{{ (getCartTotal(cartItems) | currency) }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Frete</span>
+              <span class="font-medium text-gray-900">Grátis</span>
+            </div>
+            
+            @if (discountPercent > 0) {
+            <div class="flex justify-between bg-green-50 p-2 rounded border border-green-200">
+              <span class="text-green-700 font-medium">Desconto ({{ discountPercent }}%)</span>
+              <span class="text-green-700 font-bold">-{{ (getDiscountAmount(cartItems) | currency) }}</span>
+            </div>
+            }
+            
+            <div class="flex justify-between border-t border-gray-200 pt-2 text-base font-semibold">
+              <span>Total</span>
+              <span class="text-red-600">{{ (getTotalWithDiscount(cartItems) | currency) }}</span>
+            </div>
+
+            <button (click)="processPayment()" [disabled]="isProcessing" class="w-full mt-6 rounded-lg bg-gradient-to-tl from-red-600 to-red-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:from-red-700 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition">
+              @if (isProcessing) {
+              <span class="flex items-center justify-center gap-2">
+                <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processando...
+              </span>
+              } @else {
+              Confirmar Pedido
+              }
+            </button>
+          </div>
+          }
+          }
+        </div>
+      </div>
+    }
+  </div>
+</main>

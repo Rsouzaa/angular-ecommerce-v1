@@ -1,0 +1,198 @@
+<main class="py-8 antialiased md:py-16">
+  <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    @if (customer) {
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">Minha Conta</h1>
+      <p class="text-gray-600">Bem-vindo, <span class="font-semibold">{{ customer.name }}</span>!</p>
+    </div>
+
+    <!-- Mensagem -->
+    @if (message) {
+    <div [class]="'mb-8 p-4 rounded-lg text-sm font-medium ' + (messageType === 'error' ? 'bg-red-50 text-red-800 border border-red-200' : 'bg-green-50 text-green-800 border border-green-200')">
+      {{ message }}
+    </div>
+    }
+
+    <!-- Cards de Navegação -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 shadow-md border-l-4 border-blue-600">
+        <h3 class="text-gray-700 font-semibold mb-2">📋 Meus Pedidos</h3>
+        <p class="text-3xl font-bold text-blue-600">0</p>
+        <p class="text-xs text-gray-600 mt-2">Pedidos realizados</p>
+      </div>
+      <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 shadow-md border-l-4 border-green-600">
+        <h3 class="text-gray-700 font-semibold mb-2">💳 Total Gasto</h3>
+        <p class="text-3xl font-bold text-green-600">R$ 0,00</p>
+        <p class="text-xs text-gray-600 mt-2">Em todas as compras</p>
+      </div>
+      <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 shadow-md border-l-4 border-purple-600">
+        <h3 class="text-gray-700 font-semibold mb-2">❤️ Favoritos</h3>
+        <p class="text-3xl font-bold text-purple-600">0</p>
+        <p class="text-xs text-gray-600 mt-2">Produtos salvos</p>
+      </div>
+    </div>
+
+    <!-- Seção de Perfil -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-red-600 to-red-500 p-6">
+        <h2 class="text-2xl font-bold text-white">Dados Pessoais</h2>
+      </div>
+
+      @if (!isEditing) {
+      <div class="p-6 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="text-sm text-gray-600 font-medium">Nome Completo</label>
+            <p class="text-lg text-gray-900 font-semibold">{{ customer.name }}</p>
+          </div>
+          <div>
+            <label class="text-sm text-gray-600 font-medium">Email</label>
+            <p class="text-lg text-gray-900 font-semibold">{{ customer.email }}</p>
+          </div>
+          <div>
+            <label class="text-sm text-gray-600 font-medium">Telefone</label>
+            <p class="text-lg text-gray-900 font-semibold">{{ customer.phone || 'Não informado' }}</p>
+          </div>
+          <div>
+            <label class="text-sm text-gray-600 font-medium">Membro desde</label>
+            <p class="text-lg text-gray-900 font-semibold">{{ (customer.createdAt | date: 'dd/MM/yyyy') }}</p>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Endereço</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm text-gray-600 font-medium">Endereço</label>
+              <p class="text-gray-900">{{ customer.address || 'Não informado' }}</p>
+            </div>
+            <div>
+              <label class="text-sm text-gray-600 font-medium">Cidade</label>
+              <p class="text-gray-900">{{ customer.city || 'Não informado' }}</p>
+            </div>
+            <div>
+              <label class="text-sm text-gray-600 font-medium">Estado</label>
+              <p class="text-gray-900">{{ customer.state || 'Não informado' }}</p>
+            </div>
+            <div>
+              <label class="text-sm text-gray-600 font-medium">CEP</label>
+              <p class="text-gray-900">{{ customer.zipCode || 'Não informado' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-2 pt-6 border-t border-gray-200">
+          <button
+            (click)="startEdit()"
+            class="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition"
+          >
+            ✎️ Editar Perfil
+          </button>
+          <button
+            (click)="continueShopping()"
+            class="px-6 py-3 bg-gray-200 text-gray-900 font-semibold rounded-lg hover:bg-gray-300 transition"
+          >
+            🛍️ Continuar Comprando
+          </button>
+          <button
+            (click)="logout()"
+            class="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg hover:bg-gray-500 transition"
+          >
+            🚪 Logout
+          </button>
+        </div>
+      </div>
+      } @else {
+      <!-- Formulário de Edição -->
+      <div class="p-6 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+            <input
+              type="text"
+              [(ngModel)]="editForm.name"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              [(ngModel)]="editForm.email"
+              disabled
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+            <input
+              type="tel"
+              [(ngModel)]="editForm.phone"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+            />
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Endereço</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Endereço</label>
+              <input
+                type="text"
+                [(ngModel)]="editForm.address"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Cidade</label>
+              <input
+                type="text"
+                [(ngModel)]="editForm.city"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+              <input
+                type="text"
+                [(ngModel)]="editForm.state"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+              />
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">CEP</label>
+              <input
+                type="text"
+                [(ngModel)]="editForm.zipCode"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-2 pt-6 border-t border-gray-200">
+          <button
+            (click)="saveChanges()"
+            class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition"
+          >
+            ✓ Salvar Alterações
+          </button>
+          <button
+            (click)="cancelEdit()"
+            class="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg hover:bg-gray-500 transition"
+          >
+            ✕ Cancelar
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    } @else {
+    <div class="text-center">
+      <p class="text-gray-600 mb-4">Redirecionando para login...</p>
+    </div>
+    }
+  </div>
+</main>

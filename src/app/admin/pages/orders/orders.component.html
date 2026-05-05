@@ -1,0 +1,250 @@
+<div class="space-y-6 p-6 bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">📦 Gerenciar Pedidos</h1>
+      <p class="text-gray-600">Controle todas as compras dos seus clientes</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+        <h3 class="text-gray-600 font-semibold mb-2">Total de Pedidos</h3>
+        <p class="text-3xl font-bold text-gray-900">{{ getTotalOrders() }}</p>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+        <h3 class="text-gray-600 font-semibold mb-2">Faturamento</h3>
+        <p class="text-3xl font-bold text-gray-900">{{ getTotalRevenue() | currency }}</p>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
+        <h3 class="text-gray-600 font-semibold mb-2">Pendentes</h3>
+        <p class="text-3xl font-bold text-gray-900">{{ getPendingCount() }}</p>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Buscar por Nome/Email</label>
+          <input 
+            type="text" 
+            [(ngModel)]="searchEmail"
+            placeholder="Digite nome ou email..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Filtrar por Status</label>
+          <select 
+            [(ngModel)]="filterStatus"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+          >
+            <option value="">Todos os Status</option>
+            <option *ngFor="let status of statusOptions" [value]="status.value">
+              {{ status.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Pedidos -->
+    <div class="space-y-4">
+      @if (getFilteredOrders().length === 0) {
+      <div class="bg-white rounded-lg shadow p-8 text-center">
+        <p class="text-gray-500 text-lg">Nenhum pedido encontrado</p>
+      </div>
+      } @else {
+      @for (order of getFilteredOrders(); track order.id) {
+        <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
+          <!-- Header do Pedido -->
+          <div 
+            class="p-6 cursor-pointer border-l-4"
+            [class]="'border-l-4 ' + (order.status === 'pending' ? 'border-yellow-500' : order.status === 'paid' ? 'border-green-500' : order.status === 'sent' ? 'border-blue-500' : 'border-gray-300')"
+            (click)="selectOrder(order)"
+          >
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div class="flex-1">
+                <div class="flex items-center gap-4 mb-2">
+                  <h3 class="text-lg font-semibold text-gray-900">{{ order.orderNumber }}</h3>
+                  <span [class]="'px-3 py-1 rounded-full text-sm font-semibold ' + getStatusColor(order.status)">
+                    {{ getStatusLabel(order.status) }}
+                  </span>
+                </div>
+                <p class="text-gray-600 text-sm mb-1">
+                  <strong>Cliente:</strong> {{ order.customer.fullName }}
+                </p>
+                <p class="text-gray-600 text-sm mb-1">
+                  <strong>Email:</strong> {{ order.customer.email }}
+                </p>
+                <p class="text-gray-500 text-xs">
+                  {{ order.date | date:'dd/MM/yyyy HH:mm' }}
+                </p>
+              </div>
+              <div class="text-right">
+                <p class="text-2xl font-bold text-red-600">{{ order.total | currency }}</p>
+                <p class="text-sm text-gray-600">{{ order.items.length }} produto(s)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detalhes do Pedido (Expandível) -->
+          @if (selectedOrder?.id === order.id) {
+          <div class="border-t border-gray-200 p-6 bg-gray-50 space-y-6">
+            <!-- Informações do Cliente -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="border-l-4 border-red-500 pl-4">
+                <h4 class="font-semibold text-gray-900 mb-3">📋 Dados Pessoais</h4>
+                <p class="text-sm text-gray-700 mb-1"><strong>Nome:</strong> {{ order.customer.fullName }}</p>
+                <p class="text-sm text-gray-700 mb-1"><strong>Email:</strong> {{ order.customer.email }}</p>
+                <p class="text-sm text-gray-700 mb-1"><strong>Telefone:</strong> {{ order.customer.phone }}</p>
+                <p class="text-sm text-gray-700"><strong>CPF:</strong> {{ order.customer.cpf }}</p>
+              </div>
+
+              <div class="border-l-4 border-blue-500 pl-4">
+                <h4 class="font-semibold text-gray-900 mb-3">🏠 Endereço de Entrega</h4>
+                <p class="text-sm text-gray-700 mb-1">{{ order.customer.address }}, {{ order.customer.number }}</p>
+                @if (order.customer.complement) {
+                <p class="text-sm text-gray-700 mb-1">{{ order.customer.complement }}</p>
+                }
+                <p class="text-sm text-gray-700 mb-1">{{ order.customer.city }}, {{ order.customer.state }}</p>
+                <p class="text-sm text-gray-700"><strong>CEP:</strong> {{ order.customer.zipCode }}</p>
+              </div>
+            </div>
+
+            <!-- Produtos -->
+            <div>
+              <h4 class="font-semibold text-gray-900 mb-3">📦 Produtos</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-gray-200">
+                    <tr>
+                      <th class="px-4 py-2 text-left">Produto</th>
+                      <th class="px-4 py-2 text-center">Quantidade</th>
+                      <th class="px-4 py-2 text-right">Preço Unit.</th>
+                      <th class="px-4 py-2 text-right">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (item of order.items; track item.product.id) {
+                    <tr class="border-b hover:bg-gray-100">
+                      <td class="px-4 py-3">{{ item.product.name }}</td>
+                      <td class="px-4 py-3 text-center">{{ item.quantity }}</td>
+                      <td class="px-4 py-3 text-right">{{ item.product.price | currency }}</td>
+                      <td class="px-4 py-3 text-right font-semibold">{{ (item.product.price * item.quantity) | currency }}</td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Resumo Financeiro -->
+            <div class="flex justify-end">
+              <div class="w-full md:w-80">
+                <div class="bg-white rounded-lg border border-gray-200 p-4 space-y-2">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Subtotal:</span>
+                    <span class="font-semibold">{{ order.subtotal | currency }}</span>
+                  </div>
+                  @if (order.discount > 0) {
+                  <div class="flex justify-between text-sm text-green-600">
+                    <span>Desconto ({{ order.discountPercent }}%):</span>
+                    <span>-{{ order.discount | currency }}</span>
+                  </div>
+                  }
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Frete:</span>
+                    <span class="font-semibold">Grátis</span>
+                  </div>
+                  <div class="flex justify-between border-t border-gray-200 pt-2 text-lg font-bold text-red-600">
+                    <span>TOTAL:</span>
+                    <span>{{ order.total | currency }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Informações de Pagamento e Status -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 class="font-semibold text-gray-900 mb-3">💳 Pagamento</h4>
+                <p class="text-sm text-gray-700 mb-2"><strong>Método:</strong> 
+                  @if (order.paymentMethod === 'credit-card') { Cartão de Crédito }
+                  @else if (order.paymentMethod === 'pix') { Pix }
+                  @else if (order.paymentMethod === 'boleto') { Boleto }
+                  @else { {{ order.paymentMethod }} }
+                </p>
+                @if (order.installments > 1) {
+                <p class="text-sm text-gray-700"><strong>Parcelado em:</strong> {{ order.installments }}x</p>
+                }
+              </div>
+
+              <div>
+                <h4 class="font-semibold text-gray-900 mb-3">🚚 Rastreamento</h4>
+                <div class="flex gap-2">
+                  <input 
+                    type="text" 
+                    placeholder="Número de rastreamento..."
+                    [value]="order.trackingNumber || ''"
+                    #trackingInput
+                    class="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  />
+                  <button 
+                    (click)="updateTrackingNumber(order.id, trackingInput.value)"
+                    class="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition"
+                  >
+                    Atualizar
+                  </button>
+                </div>
+                @if (order.trackingNumber) {
+                <p class="text-xs text-gray-600 mt-2">Atual: {{ order.trackingNumber }}</p>
+                }
+              </div>
+            </div>
+
+            <!-- Status e Ações -->
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 mb-2">Alterar Status do Pedido</label>
+                <select 
+                  [value]="order.status"
+                  (change)="updateStatus(order.id, $any($event).target.value)"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                >
+                  <option *ngFor="let status of statusOptions" [value]="status.value">
+                    {{ status.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="flex gap-3">
+                <button 
+                  (click)="printInvoice(order)"
+                  class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold"
+                >
+                  🖨️ Imprimir Nota Fiscal
+                </button>
+                <button 
+                  (click)="downloadInvoice(order)"
+                  class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+                >
+                  📥 Baixar Nota Fiscal
+                </button>
+                <button 
+                  (click)="deleteOrder(order.id)"
+                  class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold"
+                >
+                  🗑️ Deletar
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      }
+      }
+    </div>
+  </div>
+</div>
